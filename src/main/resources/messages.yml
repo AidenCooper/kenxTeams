@@ -1,0 +1,14 @@
+prefix: "&r&7[&ekenxTeams&7]&r"
+
+error:
+  console-sender: "{prefix} &cYou must be a player to perform this command."
+  invalid-command: "{prefix} &cThis command does not exist. Type &e/kxt help &cfor help."
+  no-arguments: "{prefix} &cArguments to this command are required."
+  no-permission: "{prefix} &cYou do not have permission to perform this command."
+
+help:
+  title: "&7-----------------> {prefix} &7<-----------------"
+  help: "&7&l> &e&l/kxt help &f- &9Displays this."
+  reload: "&7&l> &e&l/kxt reload &f- &9Reloads the config files."
+
+reload: "{prefix} &9Config files have been reloaded."

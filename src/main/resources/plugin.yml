@@ -1,0 +1,10 @@
+name: KenxTeams
+version: '${project.version}'
+main: me.majeek.kenxteams.KenxTeams
+authors: [ Majeek ]
+website: https://www.fiverr.com/users/majeek_/
+commands:
+  kenxteams:
+    aliases:
+      - kxt
+    description: Main kenxTeams command
