@@ -2,14 +2,38 @@ package me.majeek.kenxteams.commands;
 
 import org.bukkit.command.CommandSender;
 
-public interface SubCommand {
-    String[] getName();
+public class SubCommand {
+    private final String[] name;
+    private final boolean allowConsole;
+    private final int args;
 
-    String getPermission();
+    public SubCommand(String[] name, boolean allowConsole, int args) {
+        this.name = name;
+        this.allowConsole = allowConsole;
+        this.args = args;
+    }
 
-    boolean allowConsole();
+    public String[] getName() {
+        return this.name;
+    }
 
-    int requiredArgs();
+    public String getPermission() {
+        StringBuilder builder = new StringBuilder("kenxteams");
+        for(String string : this.name) {
+            builder.append(".").append(string);
+        }
+        return builder.toString();
+    }
 
-    void execute(CommandSender sender, String[] args);
+    public boolean allowConsole() {
+        return this.allowConsole;
+    }
+
+    public int requiredArgs() {
+        return this.args;
+    }
+
+    public void execute(CommandSender sender, String[] args) {
+
+    }
 }

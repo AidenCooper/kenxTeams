@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import me.majeek.kenxteams.KenxTeams;
 import me.majeek.kenxteams.commands.HelpCommand;
 import me.majeek.kenxteams.commands.SubCommand;
+import me.majeek.kenxteams.commands.VersionCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,6 +24,16 @@ public class CommandManager implements CommandExecutor {
         Objects.requireNonNull(KenxTeams.getInstance().getCommand(name)).setExecutor(this);
     }
 
+    public SubCommand getCommand(String[] name) {
+        for(SubCommand subCommand : this.subCommands) {
+            if(Arrays.equals(subCommand.getName(), name)) {
+                return subCommand;
+            }
+        }
+
+        return null;
+    }
+
     public SubCommand getCommand(Class<?> instance) {
         for (SubCommand subCommand : this.subCommands) {
             if (subCommand.getClass().isAssignableFrom(instance)) {
@@ -37,8 +48,25 @@ public class CommandManager implements CommandExecutor {
         return this.subCommands;
     }
 
-    public void sendMessage(CommandSender sender, String content) {
-        String formatted = ChatColor.translateAlternateColorCodes('&', content.replace("{prefix}", KenxTeams.getInstance().getMessagesConfig().getConfiguration().getString("prefix")));
+    public void sendMessage(CommandSender sender, String path, String... info) {
+        String[] separatedPath = path.split("\\.");
+        String raw = KenxTeams.getInstance().getMessagesConfig().getConfiguration().getString(path);
+
+        String formatted = raw.replace("{prefix}", KenxTeams.getInstance().getMessagesConfig().getConfiguration().getString("prefix"));
+
+        switch (path) {
+            case "create.created":
+            case "create.exists":
+            case "delete.deleted":
+            case "delete.not-leader":
+                formatted = formatted.replace("{team}", info[0]);
+                break;
+            case "create.over-character-limit":
+                formatted = formatted.replace("{limit}", info[0]);
+                break;
+        }
+
+        formatted = ChatColor.translateAlternateColorCodes('&', formatted);
 
         if(formatted.length() != 0) {
             sender.sendMessage(formatted);
@@ -50,7 +78,7 @@ public class CommandManager implements CommandExecutor {
 
         if(strings.length == 0) {
             for(SubCommand subCommand : this.subCommands) {
-                if(subCommand instanceof HelpCommand) {
+                if(subCommand instanceof VersionCommand) {
                     subCommand.execute(commandSender, strings);
                 }
             }
@@ -63,25 +91,22 @@ public class CommandManager implements CommandExecutor {
                                 subCommand.execute(commandSender, Arrays.copyOfRange(strings, subCommand.getName().length, strings.length));
                                 return true;
                             } else {
-                                String content = Objects.requireNonNull(KenxTeams.getInstance().getMessagesConfig().getConfiguration().getString("error.no-arguments"));
-                                this.sendMessage(commandSender, content);
+                                this.sendMessage(commandSender, "error.no-arguments");
                                 return false;
                             }
                         } else {
-                            String content = Objects.requireNonNull(KenxTeams.getInstance().getMessagesConfig().getConfiguration().getString("error.no-permission"));
-                            this.sendMessage(commandSender, content);
+                            this.sendMessage(commandSender, "error.no-permission");
                             return false;
                         }
                     } else {
-                        String content = Objects.requireNonNull(KenxTeams.getInstance().getMessagesConfig().getConfiguration().getString("error.console-sender"));
-                        this.sendMessage(commandSender, content);
+                        this.sendMessage(commandSender, "error.console-sender");
                         return false;
                     }
                 }
             }
 
-            String content = Objects.requireNonNull(KenxTeams.getInstance().getMessagesConfig().getConfiguration().getString("error.invalid-command"));
-            this.sendMessage(commandSender, content);
+            this.sendMessage(commandSender, "error.invalid-command");
+
             return false;
         }
 

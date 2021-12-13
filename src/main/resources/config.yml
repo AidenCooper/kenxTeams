@@ -1,0 +1,2 @@
+team-name-character-limit: 16 # Maximum amount of characters a team name can have
+permission-based-help-command: true # If this is set to true than the player will only see commands they have permission to use.

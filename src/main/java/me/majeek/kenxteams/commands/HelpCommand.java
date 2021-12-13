@@ -3,37 +3,24 @@ package me.majeek.kenxteams.commands;
 import me.majeek.kenxteams.KenxTeams;
 import org.bukkit.command.CommandSender;
 
-import java.util.Map;
-import java.util.Objects;
-
-public class HelpCommand implements SubCommand {
-    @Override
-    public String[] getName() {
-        return new String[]{ "help" };
-    }
-
-    @Override
-    public String getPermission() {
-        return "kenxteams.help";
-    }
-
-    @Override
-    public boolean allowConsole() {
-        return true;
-    }
-
-    @Override
-    public int requiredArgs() {
-        return 0;
+public class HelpCommand extends SubCommand {
+    public HelpCommand() {
+        super(new String[]{"help"}, true, 0);
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        Map<String, Object> content = Objects.requireNonNull(KenxTeams.getInstance().getMessagesConfig().getConfiguration().getConfigurationSection("help")).getValues(true);
+        boolean permissionBased = KenxTeams.getInstance().getMainConfig().getConfiguration().getBoolean("permission-based-help-command");
 
-        for(Object item : content.values()){
-            if(item instanceof String) {
-                KenxTeams.getInstance().getCommandManager().sendMessage(sender, (String) item);
+        KenxTeams.getInstance().getCommandManager().sendMessage(sender, "help.title");
+        for(String key : KenxTeams.getInstance().getMessagesConfig().getConfiguration().getConfigurationSection("help").getValues(true).keySet()) {
+            if(key.equals("title")) {
+                continue;
+            }
+
+            String[] name = key.split("-");
+            if(!permissionBased || sender.hasPermission(KenxTeams.getInstance().getCommandManager().getCommand(name).getPermission())) {
+                KenxTeams.getInstance().getCommandManager().sendMessage(sender, "help." + key);
             }
         }
     }

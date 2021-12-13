@@ -6,7 +6,7 @@
 
     <groupId>me.majeek</groupId>
     <artifactId>kenxTeams</artifactId>
-    <version>1.7.10</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>KenxTeams</name>
