@@ -1,10 +1,12 @@
 package me.majeek.kenxteams.commands;
 
 import me.majeek.kenxteams.KenxTeams;
+import me.majeek.kenxteams.TeamHelper;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class CreateCommand extends SubCommand {
     public CreateCommand() {
@@ -13,24 +15,17 @@ public class CreateCommand extends SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        String uuid = ((Player) sender).getUniqueId().toString();
+        UUID uuid = ((Player) sender).getUniqueId();
 
-        if(KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().getString(uuid + ".team").equals("")) {
-            boolean exists = false;
-            for(String name : KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().getValues(true).keySet()) {
-                if(name.equalsIgnoreCase(args[0])) {
-                    exists = true;
-                    break;
-                }
-            }
-
-            if(!exists) {
+        if(!TeamHelper.isInTeam(uuid)) {
+            if(!TeamHelper.isTeam(args[0])) {
                 int limit = KenxTeams.getInstance().getMainConfig().getConfiguration().getInt("team-name-character-limit");
 
                 if(args[0].length() <= limit) {
                     KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().set(uuid + ".team", args[0]);
 
-                    KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".leader", uuid);
+                    KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".claims", new ArrayList<String>());
+                    KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".leader", uuid.toString());
                     KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".members", new ArrayList<String>());
                     KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".points", 0);
 

@@ -15,6 +15,8 @@ public class PlayerDataListener implements Listener {
         String name = event.getPlayer().getName();
         String uuid = event.getPlayer().getUniqueId().toString();
 
+        KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().set(uuid + ".lastLogin", Timestamp.from(Instant.now()).toString());
+
         String old = KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().getString(uuid + ".name");
         if(old != null) {
             if(!old.equals(name)) {
@@ -32,8 +34,6 @@ public class PlayerDataListener implements Listener {
             KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().set(uuid + ".team", "");
         }
 
-        KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().set(uuid + ".lastLogin", Timestamp.from(Instant.now()).toString());
-
         KenxTeams.getInstance().getPlayerDataConfig().saveConfig();
     }
 
@@ -46,7 +46,5 @@ public class PlayerDataListener implements Listener {
 
         KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().set(uuid + ".playtime", minutes + KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().getInt(uuid + ".playtime"));
         KenxTeams.getInstance().getPlayerDataConfig().saveConfig();
-
-        System.out.println("PLAYER EVENT");
     }
 }

@@ -1,8 +1,11 @@
 package me.majeek.kenxteams.commands;
 
 import me.majeek.kenxteams.KenxTeams;
+import me.majeek.kenxteams.TeamHelper;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class DeleteCommand extends SubCommand {
     public DeleteCommand() {
@@ -11,13 +14,15 @@ public class DeleteCommand extends SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        String uuid = ((Player) sender).getUniqueId().toString();
+        UUID uuid = ((Player) sender).getUniqueId();
 
-        if(!KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().getString(uuid + ".team").equals("")) {
-            String team = KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().getString(uuid + ".team");
+        if(TeamHelper.isInTeam(uuid)) {
+            String team = TeamHelper.getTeam(uuid);
 
-            if(KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getString(team + ".leader").equals(uuid)) {
+            if(TeamHelper.isTeamLeader(uuid)) {
+                TeamHelper.getTeamMembers(team).forEach(member -> KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().set(member + ".team", ""));
                 KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().set(uuid + ".team", "");
+
                 KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team, null);
 
                 KenxTeams.getInstance().getPlayerDataConfig().saveConfig();

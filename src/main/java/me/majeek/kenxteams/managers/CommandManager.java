@@ -2,7 +2,6 @@ package me.majeek.kenxteams.managers;
 
 import com.google.common.collect.Sets;
 import me.majeek.kenxteams.KenxTeams;
-import me.majeek.kenxteams.commands.HelpCommand;
 import me.majeek.kenxteams.commands.SubCommand;
 import me.majeek.kenxteams.commands.VersionCommand;
 import org.bukkit.ChatColor;
@@ -55,10 +54,25 @@ public class CommandManager implements CommandExecutor {
         String formatted = raw.replace("{prefix}", KenxTeams.getInstance().getMessagesConfig().getConfiguration().getString("prefix"));
 
         switch (path) {
+            case "claims.claim-item":
+                formatted = formatted.replace("{count}", info[3]);
+            case "claim.already-claimed":
+            case "claim.claimed":
+            case "claim.owns":
+            case "unclaim.unclaimed":
+                formatted = formatted.replace("{x}", info[1]);
+                formatted = formatted.replace("{z}", info[2]);
+            case "claim.over-limit":
+            case "claim.not-leader":
+            case "claims.claims":
+            case "claims.not-in-team":
+            case "claims.not-leader":
             case "create.created":
             case "create.exists":
             case "delete.deleted":
             case "delete.not-leader":
+            case "unclaim.no-claims":
+            case "unclaim.not-leader":
                 formatted = formatted.replace("{team}", info[0]);
                 break;
             case "create.over-character-limit":

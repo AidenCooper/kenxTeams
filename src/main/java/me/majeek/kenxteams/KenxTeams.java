@@ -6,7 +6,6 @@ import me.majeek.kenxteams.configs.ConfigFile;
 import me.majeek.kenxteams.listeners.PlayerDataListener;
 import me.majeek.kenxteams.managers.CommandManager;
 import me.majeek.kenxteams.managers.EventManager;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,10 +35,13 @@ public final class KenxTeams extends JavaPlugin {
         this.teamDataConfig = new ConfigFile("team_data").createFile(false).loadConfig();
 
         Set<SubCommand> commands = Sets.newHashSet(
+                new ClaimCommand(),
+                new ClaimsCommand(),
                 new CreateCommand(),
                 new DeleteCommand(),
                 new HelpCommand(),
                 new ReloadCommand(),
+                new UnclaimCommand(),
                 new VersionCommand()
         );
         Set<Listener> listeners = Sets.newHashSet(
