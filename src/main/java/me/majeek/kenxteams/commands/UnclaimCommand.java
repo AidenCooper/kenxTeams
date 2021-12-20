@@ -43,28 +43,31 @@ public class UnclaimCommand extends SubCommand {
                         }
 
                         int count = 0;
+                        String world = ((Player) sender).getWorld().getName();
                         Chunk chunk = ((Player) sender).getLocation().getChunk();
                         ImmutableList<Integer> location = ImmutableList.copyOf(Arrays.asList(chunk.getX(), chunk.getZ()));
                         for (int x = -radius; x <= radius; x++) {
                             for (int z = -radius; z <= radius; z++) {
                                 ImmutableList<Integer> newChunk = ImmutableList.copyOf(Arrays.asList(location.get(0) + x, location.get(1) + z));
 
-                                String result = TeamHelper.getTeamFromChunk(newChunk);
+                                String result = TeamHelper.getTeamFromChunk(newChunk, world);
                                 if(result != null && result.equalsIgnoreCase(team)) {
                                     count++;
 
-                                    TeamHelper.unclaimChunk(newChunk);
+                                    TeamHelper.unclaimChunk(newChunk, world);
 
-                                    KenxTeams.getInstance().getCommandManager().sendMessage(sender, "unclaim.unclaimed", team, newChunk.get(0).toString(), newChunk.get(1).toString());
+                                    KenxTeams.getInstance().getCommandManager().sendMessage(sender, "unclaim.unclaimed", team, newChunk.get(0).toString(), newChunk.get(1).toString(), world);
                                 }
                             }
                         }
 
                         if(count == 0) {
                             KenxTeams.getInstance().getCommandManager().sendMessage(sender, "unclaim.no-claims", team);
+                        } else {
+                            TeamHelper.updatePoints(team);
                         }
                     }
-                }.runTaskAsynchronously(KenxTeams.getInstance());
+                }.runTask(KenxTeams.getInstance());
             } else {
                 KenxTeams.getInstance().getCommandManager().sendMessage(sender, "unclaim.not-leader", team);
             }

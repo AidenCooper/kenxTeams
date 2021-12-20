@@ -1,15 +1,15 @@
 prefix: "&r&7[&ekenxTeams&7]&r" # Use {prefix} anywhere below to get this
 
 claim:
-  already-claimed: "{prefix} &cThe &5{team} &cteam owns chunk &5X-{x} Z-{z}&c." # {team} {x} {z}
-  claimed: "{prefix} &aYour team now owns chunk &5X-{x} Z-{z}&a." # {team} {x} {z}
+  already-claimed: "{prefix} &cThe &5{team} &cteam owns chunk &5X-{x} Z-{z} World-{world}&c." # {team} {x} {z} {world}
+  claimed: "{prefix} &aYour team now owns chunk &5X-{x} Z-{z} World-{world}&a." # {team} {x} {z} {world}
   over-limit: "{prefix} &cYour team cannot claim any more chunks." # {team}
-  owns: "{prefix} &cYour team owns chunk &5X-{x} Z-{z}&c." # {team} {x} {z}
+  owns: "{prefix} &cYour team owns chunk &5X-{x} Z-{z} World-{world}&c." # {team} {x} {z} {world}
   not-in-team: "{prefix} &cYou are not currently in a team."
   not-leader: "{prefix} &cYou are not the leader." # {team}
 
 claims:
-  claim-item: "&aChunk Claim {count}: &5X-{x} Z-{z}&a." # {team} {x} {z}
+  claim-item: "&aChunk Claim {count}: &5X-{x} Z-{z} World-{world}&a." # {team} {x} {z} {world} {count}
   not-in-team: "{prefix} &cYou are not currently in a team."
   not-leader: "{prefix} &cYou are not the leader." # {team}
 
@@ -38,9 +38,21 @@ help:
   create: "&7> &e/kxt create <team> &7- &aCreates a new team if you are not in a team and it does not already exist."
   delete: "&7> &e/kxt delete &7- &aDeletes the team if you are the leader."
   help: "&7> &e/kxt help &7- &aDisplays this."
+  points-add: "&7> &e/kxt points add <team> <points> &7- &aAdds the amount of points to the team."
+  points-remove: "&7> &e/kxt points remove <team> <points> &7- &aRemoves the amount of points from the team."
   reload: "&7> &e/kxt reload &7- &aReloads the config files."
   unclaim: "&7> &e/kxt unclaim [radius] &7- &aUnclaims an area for your team in an optional radius of a square in blocks."
   version: "&7> &e/kxt version &7- &aDisplays information about this plugin."
+
+leave:
+  disbanded: "{prefix} &aYour team has been disbanded." # {team}
+  leave: "{prefix} &aYou have left &5{team}&a." # {team}
+  transfer: "{prefix} &5{leader} is now the leader since you left." # {team} {leader}
+  not-in-team: "{prefix} &cYou are not currently in a team."
+
+points:
+  added: "{prefix} &5{points} &apoints were added to team &5{team}&a." # {points} {team}
+  removed: "{prefix} &5{points} &apoints were removed from team &5{team}&a." # {points} {team}
 
 reload: "{prefix} &aConfig files have been reloaded."
 
@@ -48,4 +60,4 @@ unclaim:
   no-claims: "{prefix} &cYour team has no claims in the area." # {team}
   not-in-team: "{prefix} &cYou are not currently in a team."
   not-leader: "{prefix} &cYou are not the leader." # {team}
-  unclaimed: "{prefix} &aChunk &5X-{x} Z-{z} &anow unclaimed." # {team} {x} {z}
+  unclaimed: "{prefix} &aChunk &5X-{x} Z-{z} World-{world} &anow unclaimed." # {team} {x} {z} {world}

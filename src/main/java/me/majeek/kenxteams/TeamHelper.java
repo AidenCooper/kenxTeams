@@ -2,56 +2,222 @@ package me.majeek.kenxteams;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import javafx.util.Pair;
+import net.minecraft.util.com.google.common.collect.Maps;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
 public class TeamHelper {
-    public static void claimChunk(String team, ImmutableList<Integer> playerChunk) {
-        List<ImmutableList<Integer>> chunks = TeamHelper.getChunkList(team);
-        chunks.add(playerChunk);
+    public static int getPoints(String team) {
+        return KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getInt(team + ".points");
+    }
 
-        List<String> formatted = Lists.newArrayList();
-        for(ImmutableList<Integer> chunk : chunks) {
-            formatted.add(String.valueOf(chunk.get(0)) + ':' + chunk.get(1));
+    public static void setPoints(String team, int points) {
+        int minimum = KenxTeams.getInstance().getMainConfig().getConfiguration().getInt("points.minimum");
+        int maximum = KenxTeams.getInstance().getMainConfig().getConfiguration().getInt("points.maximum");
+
+        if(points > maximum) {
+            KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".points", maximum);
+        } else if(points < minimum) {
+            KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".points", minimum);
+        } else {
+            KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".points", points);
         }
 
-        KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".claims", formatted);
         KenxTeams.getInstance().getTeamDataConfig().saveConfig();
     }
 
-    public static void unclaimChunk(ImmutableList<Integer> chunk) {
-        for(String team : TeamHelper.getTeamList()) {
-            List<ImmutableList<Integer>> chunks = TeamHelper.getChunkList(team);
+    public static void updatePoints(String team) {
+        List<String> sets = new ArrayList<>(KenxTeams.getInstance().getPointsConfig().getConfiguration().getValues(false).keySet());
 
-            for(int i = 0; i < chunks.size(); i++) {
-                if(chunks.get(i).get(0).equals(chunk.get(0)) && chunks.get(i).get(1).equals(chunk.get(1))) {
-                    chunks.remove(i);
+        List<ImmutableList<Integer>> chunks = getChestChunks(team);
+        List<ImmutableList<Integer>> locations = getChestLocations(team);
+        List<String> worlds = getChestWorlds(team);
 
-                    List<String> formatted = Lists.newArrayList();
-                    for(ImmutableList<Integer> temp : chunks) {
-                        formatted.add(String.valueOf(temp.get(0)) + ':' + temp.get(1));
+        int points = 0;
+        for(int i = 0; i < chunks.size(); i++) {
+            World world = Bukkit.getWorld(worlds.get(i));
+            Block block = world.getBlockAt(new Location(world, locations.get(i).get(0), locations.get(i).get(1), locations.get(i).get(2)));
+            ItemStack[] items;
+
+            if(block.getType() == Material.CHEST) {
+                items = ((Chest) block.getState()).getInventory().getContents();
+            } else {
+                continue;
+            }
+
+            List<HashMap<Material, Integer>> data = Lists.newArrayList();
+            for(ItemStack item : items) {
+                for (int j = 0; j < sets.size(); j++) {
+                    if(data.size() <= j) {
+                        data.add(Maps.newHashMap());
                     }
 
-                    KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".claims", formatted);
-                    KenxTeams.getInstance().getTeamDataConfig().saveConfig();
+                    Map<String, Object> required = KenxTeams.getInstance().getPointsConfig().getConfiguration().getConfigurationSection(sets.get(j) + ".materials").getValues(false);
+                    List<String> keys = new ArrayList<>(required.keySet());
+                    for (int k = 0; k < keys.size(); k++) {
+                        Material material = Material.valueOf(keys.get(k));
 
-                    return;
+                        data.get(j).putIfAbsent(material, 0);
+
+                        if (item != null && material == item.getType()) {
+                            data.get(j).put(material, data.get(j).get(material) + item.getAmount());
+                        }
+                    }
                 }
             }
+
+            for(int j = 0; j < sets.size(); j++) {
+                Map<String, Object> required = KenxTeams.getInstance().getPointsConfig().getConfiguration().getConfigurationSection(sets.get(j) + ".materials").getValues(false);
+                List<String> keys = new ArrayList<>(required.keySet());
+
+                List<Integer> total = Lists.newArrayList();
+                for (int k = 0; k < keys.size(); k++) {
+                    Material material = Material.valueOf(keys.get(k));
+                    int amount = (int) required.get(keys.get(k));
+
+                    total.add(data.get(j).get(material) / amount);
+                }
+
+                points += (KenxTeams.getInstance().getPointsConfig().getConfiguration().getInt(sets.get(j) + ".points") * Collections.min(total));
+            }
         }
+
+        KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".points", points);
+        KenxTeams.getInstance().getTeamDataConfig().saveConfig();
     }
 
-    public static List<ImmutableList<Integer>> getChunkList(String team) {
-        List<String> unformatted = KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getStringList(team + ".claims");
+    public static void addChest(String team, Location location) {
+        String formatted = location.getChunk().getX() + ":" + location.getChunk().getZ() + "-" + location.getBlockX() + ":" + location.getBlockY() + ":" + location.getBlockZ() + "-" + location.getWorld().getName();
+
+        List<String> chests = KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getStringList(team + ".chests");
+        chests.add(formatted);
+
+        KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".chests", chests);
+        KenxTeams.getInstance().getTeamDataConfig().saveConfig();
+    }
+
+    public static void removeChest(String team, Location location) {
+        String formatted = location.getChunk().getX() + ":" + location.getChunk().getZ() + "-" + location.getBlockX() + ":" + location.getBlockY() + ":" + location.getBlockZ() + "-" + location.getWorld().getName();
+
+        List<String> chests = KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getStringList(team + ".chests");
+        for(int i = 0; i < chests.size(); i++) {
+            if(chests.get(i).equals(formatted)) {
+                chests.remove(i);
+                break;
+            }
+        }
+
+        KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".chests", chests);
+        KenxTeams.getInstance().getTeamDataConfig().saveConfig();
+    }
+
+    public static List<ImmutableList<Integer>> getChestChunks(String team) {
+        List<String> unformatted = KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getStringList(team + ".chests");
         List<ImmutableList<Integer>> formatted = Lists.newArrayList();
 
-        for(String chunk : unformatted) {
-            String[] separated = chunk.split(":");
+        for(String chest : unformatted) {
+            String[] separated = chest.split("-")[0].split(":");
 
             formatted.add(ImmutableList.copyOf(Arrays.asList(Integer.parseInt(separated[0]), Integer.parseInt(separated[1]))));
         }
 
         return formatted;
+    }
+
+    public static List<ImmutableList<Integer>> getChestLocations(String team) {
+        List<String> unformatted = KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getStringList(team + ".chests");
+        List<ImmutableList<Integer>> formatted = Lists.newArrayList();
+
+        for(String chest : unformatted) {
+            String[] separated = chest.split("-")[1].split(":");
+
+            formatted.add(ImmutableList.copyOf(Arrays.asList(Integer.parseInt(separated[0]), Integer.parseInt(separated[1]), Integer.parseInt(separated[2]))));
+        }
+
+        return formatted;
+    }
+
+    public static List<String> getChestWorlds(String team) {
+        List<String> unformatted = KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getStringList(team + ".chests");
+        List<String> formatted = Lists.newArrayList();
+
+        for(String chest : unformatted) {
+            formatted.add(chest.split("-")[2]);
+        }
+
+        return formatted;
+    }
+
+    public static void claimChunk(String team, ImmutableList<Integer> playerChunk, String world) {
+        List<String> formatted = KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getStringList(team + ".claims");
+        formatted.add(String.valueOf(playerChunk.get(0)) + ':' + playerChunk.get(1) + '-' + world);
+
+        KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".claims", formatted);
+        KenxTeams.getInstance().getTeamDataConfig().saveConfig();
+    }
+
+    public static void unclaimChunk(ImmutableList<Integer> chunk, String world) {
+        for(String team : TeamHelper.getTeamList()) {
+            List<Pair<ImmutableList<Integer>, String>> data = TeamHelper.getChunkList(team);
+
+            for(int i = 0; i < data.size(); i++) {
+                if(data.get(i).getKey().get(0).equals(chunk.get(0)) && data.get(i).getKey().get(1).equals(chunk.get(1)) && data.get(i).getValue().equalsIgnoreCase(world)) {
+                    List<ImmutableList<Integer>> chest = getChestChunks(team);
+                    for(int j = 0; j < chest.size(); j++) {
+                        ImmutableList<Integer> key = data.get(i).getKey();
+                        ImmutableList<Integer> chestChunk = chest.get(j);
+
+                        if(key.get(0).equals(chestChunk.get(0)) && key.get(1).equals(chestChunk.get(1)) && data.get(i).getValue().equalsIgnoreCase(getChestWorlds(team).get(j))) {
+                            ImmutableList<Integer> location = getChestLocations(team).get(j);
+                            removeChest(team, new Location(Bukkit.getWorld(world), location.get(0), location.get(1), location.get(2)));
+
+                            if(getChestChunks(team).size() == 0) {
+                                break;
+                            } else {
+                                j--;
+                            }
+                        }
+                    }
+
+                    data.remove(i);
+
+                    List<String> formatted = Lists.newArrayList();
+                    for(Pair<ImmutableList<Integer>, String> pair : data) {
+                        formatted.add(String.valueOf(pair.getKey().get(0)) + ':' + pair.getKey().get(1) + '-' + pair.getValue());
+                    }
+
+                    KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".claims", formatted);
+                    KenxTeams.getInstance().getTeamDataConfig().saveConfig();
+
+                    updatePoints(team);
+
+                    break;
+                }
+            }
+        }
+    }
+
+    public static List<Pair<ImmutableList<Integer>, String>> getChunkList(String team) {
+        List<String> unformatted = KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getStringList(team + ".claims");
+
+        List<Pair<ImmutableList<Integer>, String>> data = Lists.newArrayList();
+
+        for(String chunk : unformatted) {
+            String[] chunkSeparated = chunk.split("-")[0].split(":");
+            String world = chunk.split("-")[1];
+
+            data.add(new Pair<>(ImmutableList.copyOf(Arrays.asList(Integer.parseInt(chunkSeparated[0]), Integer.parseInt(chunkSeparated[1]))), world));
+        }
+
+        return data;
     }
 
     public static String getTeam(UUID uuid) {
@@ -60,10 +226,10 @@ public class TeamHelper {
         return team.equals("") ? null : team;
     }
 
-    public static String getTeamFromChunk(ImmutableList<Integer> chunk) {
+    public static String getTeamFromChunk(ImmutableList<Integer> chunk, String world) {
         for(String team : TeamHelper.getTeamList()) {
-            for(ImmutableList<Integer> location : TeamHelper.getChunkList(team)) {
-                if(location.get(0).equals(chunk.get(0)) && location.get(1).equals(chunk.get(1))) {
+            for(Pair<ImmutableList<Integer>, String> pair : TeamHelper.getChunkList(team)) {
+                if(pair.getKey().get(0).equals(chunk.get(0)) && pair.getKey().get(1).equals(chunk.get(1)) && pair.getValue().equalsIgnoreCase(world)) {
                     return team;
                 }
             }

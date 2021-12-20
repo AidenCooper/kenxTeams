@@ -48,20 +48,26 @@ public class CommandManager implements CommandExecutor {
     }
 
     public void sendMessage(CommandSender sender, String path, String... info) {
-        String[] separatedPath = path.split("\\.");
         String raw = KenxTeams.getInstance().getMessagesConfig().getConfiguration().getString(path);
-
         String formatted = raw.replace("{prefix}", KenxTeams.getInstance().getMessagesConfig().getConfiguration().getString("prefix"));
 
         switch (path) {
             case "claims.claim-item":
-                formatted = formatted.replace("{count}", info[3]);
+                formatted = formatted.replace("{team}", info[0]);
+                formatted = formatted.replace("{x}", info[1]);
+                formatted = formatted.replace("{z}", info[2]);
+                formatted = formatted.replace("{world", info[3]);
+                formatted = formatted.replace("{count}", info[4]);
+                break;
             case "claim.already-claimed":
             case "claim.claimed":
             case "claim.owns":
             case "unclaim.unclaimed":
+                formatted = formatted.replace("{team}", info[0]);
                 formatted = formatted.replace("{x}", info[1]);
                 formatted = formatted.replace("{z}", info[2]);
+                formatted = formatted.replace("{world}", info[3]);
+                break;
             case "claim.over-limit":
             case "claim.not-leader":
             case "claims.claims":
@@ -73,10 +79,21 @@ public class CommandManager implements CommandExecutor {
             case "delete.not-leader":
             case "unclaim.no-claims":
             case "unclaim.not-leader":
+            case "leave.disbanded":
+            case "leave.leave":
                 formatted = formatted.replace("{team}", info[0]);
                 break;
             case "create.over-character-limit":
                 formatted = formatted.replace("{limit}", info[0]);
+                break;
+            case "points.added":
+            case "points.removed":
+                formatted = formatted.replace("{points}", info[0]);
+                formatted = formatted.replace("{team}", info[1]);
+                break;
+            case "leave.transfer":
+                formatted = formatted.replace("{team}", info[0]);
+                formatted = formatted.replace("{leader}", info[1]);
                 break;
         }
 

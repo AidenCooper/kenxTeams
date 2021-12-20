@@ -1,3 +1,8 @@
 team-chunk-limit: 20 # Maximum amount of chunks a team can claim.
 team-name-character-limit: 16 # Maximum amount of characters a team name can have.
 permission-based-help-command: true # If this is set to true than the player will only see commands they have permission to use.
+squid-spawners-enabled: false # If squid spawners will spawn any squids
+
+points: # Minimum amount and maximum amount of points a team can have
+  minimum: 0
+  maximum: 100000

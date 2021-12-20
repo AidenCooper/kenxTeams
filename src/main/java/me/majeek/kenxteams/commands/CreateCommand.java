@@ -24,8 +24,10 @@ public class CreateCommand extends SubCommand {
                 if(args[0].length() <= limit) {
                     KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().set(uuid + ".team", args[0]);
 
+                    KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".chests", new ArrayList<String>());
                     KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".claims", new ArrayList<String>());
                     KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".leader", uuid.toString());
+                    KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".mods", new ArrayList<String>());
                     KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".members", new ArrayList<String>());
                     KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".points", 0);
 

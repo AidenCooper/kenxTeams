@@ -42,31 +42,34 @@ public class ClaimCommand extends SubCommand {
                             }
                         }
 
+                        String world = ((Player) sender).getWorld().getName();
                         Chunk chunk = ((Player) sender).getLocation().getChunk();
                         ImmutableList<Integer> location = ImmutableList.copyOf(Arrays.asList(chunk.getX(), chunk.getZ()));
                         for (int x = -radius; x <= radius; x++) {
                             for (int z = -radius; z <= radius; z++) {
                                 ImmutableList<Integer> newChunk = ImmutableList.copyOf(Arrays.asList(location.get(0) + x, location.get(1) + z));
 
-                                String result = TeamHelper.getTeamFromChunk(newChunk);
+                                String result = TeamHelper.getTeamFromChunk(newChunk, world);
                                 if(result == null) {
                                     if(KenxTeams.getInstance().getMainConfig().getConfiguration().getInt("team-chunk-limit") >= TeamHelper.getChunkList(team).size()) {
-                                        TeamHelper.claimChunk(team, newChunk);
+                                        TeamHelper.claimChunk(team, newChunk, world);
 
-                                        KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claim.claimed", team, newChunk.get(0).toString(), newChunk.get(1).toString());
+                                        KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claim.claimed", team, newChunk.get(0).toString(), newChunk.get(1).toString(), world);
                                     } else {
                                         KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claim.over-limit", team);
                                         return;
                                     }
                                 } else if (result.equalsIgnoreCase(TeamHelper.getTeam(uuid))) {
-                                    KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claim.owns", team, newChunk.get(0).toString(), newChunk.get(1).toString());
+                                    KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claim.owns", team, newChunk.get(0).toString(), newChunk.get(1).toString(), world);
                                 } else {
-                                    KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claim.already-claimed", result, newChunk.get(0).toString(), newChunk.get(1).toString());
+                                    KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claim.already-claimed", result, newChunk.get(0).toString(), newChunk.get(1).toString(), world);
                                 }
                             }
                         }
+
+                        TeamHelper.updatePoints(team);
                     }
-                }.runTaskAsynchronously(KenxTeams.getInstance());
+                }.runTask(KenxTeams.getInstance());
             } else {
                 KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claim.not-leader", team);
             }

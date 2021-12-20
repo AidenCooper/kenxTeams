@@ -1,6 +1,7 @@
 package me.majeek.kenxteams.commands;
 
 import com.google.common.collect.ImmutableList;
+import javafx.util.Pair;
 import me.majeek.kenxteams.KenxTeams;
 import me.majeek.kenxteams.TeamHelper;
 import org.bukkit.command.CommandSender;
@@ -22,9 +23,9 @@ public class ClaimsCommand extends SubCommand {
 
         if(team != null) {
             if (TeamHelper.isTeamLeader(uuid)) {
-                List<ImmutableList<Integer>> chunks = TeamHelper.getChunkList(team);
+                List<Pair<ImmutableList<Integer>, String>> chunks = TeamHelper.getChunkList(team);
                 for(int i = 0; i < chunks.size(); i++) {
-                    KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claims.claim-item", team, chunks.get(i).get(0).toString(), chunks.get(i).get(1).toString(), Integer.toString(i));
+                    KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claims.claim-item", team, chunks.get(i).getKey().get(0).toString(), chunks.get(i).getKey().get(1).toString(), chunks.get(i).getValue(), Integer.toString(i));
                 }
             } else {
                 KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claims.not-leader", team);
