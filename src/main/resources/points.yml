@@ -4,3 +4,7 @@
     DIAMOND: 2
     IRON_SWORD: 1
   points: 4
+#2:
+#  materials:
+#    DIAMOND_SWORD: 6
+#  points: 42
