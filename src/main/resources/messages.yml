@@ -52,6 +52,7 @@ error:
 help:
   title: "&7-----------------> &ePage {page} &7<-----------------" # {page}
   accept: "&7> &e/kxt accept <player/team> &7- &aAccepts any invite or join requests."
+  chat: "&7> &e/kxt chat &7- &aToggles chat between Global and your Team."
   claim: "&7> &e/kxt claim [radius] &7- &aClaims an area for your team in an optional radius of a square in blocks."
   claims: "&7> &e/kxt claims [page] &7- &aLists all locations of the teams claims."
   create: "&7> &e/kxt create <team> &7- &aCreates a new team if you are not in a team and it does not already exist."
