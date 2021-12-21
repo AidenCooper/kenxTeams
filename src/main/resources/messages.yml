@@ -65,6 +65,8 @@ help:
   points-remove: "&7> &e/kxt points remove <points> &7- &aRemoves the amount of points from your teams modifier."
   points-total: "&7> &e/kxt points total &7- &aDisplays your teams total points."
   promote: "&7> &e/kxt promote <player> &7- &aPromotes the player in your team."
+  raid-start: "&7> &e/kxt raid start <team> &7- &aStarts a raid attacking another team."
+  raid-stop: "&7> &e/kxt raid stop &7- &aStops your current raid."
   reload: "&7> &e/kxt reload &7- &aReloads the config files."
   top: "&7> &e/kxt top [page] &7- &aDisplays all teams ranked by points."
   unclaim: "&7> &e/kxt unclaim [radius] &7- &aUnclaims an area for your team in an optional radius of a square in blocks."
