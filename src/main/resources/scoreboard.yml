@@ -1,0 +1,9 @@
+title: "&e&lkenxTeams"
+lines:
+  - "&cAttacking: &5{attacker}"
+  - "&cDefending: &5{defender}"
+  - ""
+  - "&eCountdown: &5{countdown}"
+
+# Can use PlaceholderAPI for this
+# {attacker} {defender} {countdown}

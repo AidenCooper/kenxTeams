@@ -69,10 +69,10 @@ public class UnclaimCommand extends SubCommand {
                     }
                 }.runTask(KenxTeams.getInstance());
             } else {
-                KenxTeams.getInstance().getCommandManager().sendMessage(sender, "unclaim.not-leader", team);
+                KenxTeams.getInstance().getCommandManager().sendMessage(sender, "error.not-leader", team);
             }
         } else {
-            KenxTeams.getInstance().getCommandManager().sendMessage(sender, "unclaim.not-in-team");
+            KenxTeams.getInstance().getCommandManager().sendMessage(sender, "error.not-in-team");
         }
     }
 }

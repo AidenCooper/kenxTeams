@@ -5,6 +5,8 @@ import me.majeek.kenxteams.TeamHelper;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -27,9 +29,10 @@ public class CreateCommand extends SubCommand {
                     KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".chests", new ArrayList<String>());
                     KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".claims", new ArrayList<String>());
                     KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".leader", uuid.toString());
-                    KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".mods", new ArrayList<String>());
                     KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".members", new ArrayList<String>());
-                    KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".points", 0);
+                    KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".points.modifier", 0);
+                    KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".points.total", 0);
+                    KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(args[0] + ".raid", Timestamp.from(Instant.now()).toString());
 
                     KenxTeams.getInstance().getPlayerDataConfig().saveConfig();
                     KenxTeams.getInstance().getTeamDataConfig().saveConfig();

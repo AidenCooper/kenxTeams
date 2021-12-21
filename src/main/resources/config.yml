@@ -1,8 +1,20 @@
-team-chunk-limit: 20 # Maximum amount of chunks a team can claim.
-team-name-character-limit: 16 # Maximum amount of characters a team name can have.
-permission-based-help-command: true # If this is set to true than the player will only see commands they have permission to use.
-squid-spawners-enabled: false # If squid spawners will spawn any squids
+permission-based-help-command: true # If this is set to true than the player will only see commands they have permission to use
+raid-cooldown: 60 # Amount of time in minutes before a team can be raided again
+squid-spawn-enabled: false # If squid spawners will spawn any squids
+team-chat-format: "&7[&e{rank}&7] &5{name} &c> {message}" # Format for team chat : {rank} {name} {message}
+team-chunk-limit: 20 # Maximum amount of chunks a team can claim
+team-name-character-limit: 16 # Maximum amount of characters a team name can have
+
+pagination: # This is the maximum number of items that will be displayed per page
+  claims: 20
+  help: 5
+  top: 10
 
 points: # Minimum amount and maximum amount of points a team can have
   minimum: 0
   maximum: 100000
+
+timer: # A countdown timer for each command
+  invite: 60
+  join: 60
+  raid: 20

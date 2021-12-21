@@ -30,10 +30,10 @@ public class DeleteCommand extends SubCommand {
 
                 KenxTeams.getInstance().getCommandManager().sendMessage(sender, "delete.deleted", team);
             } else {
-                KenxTeams.getInstance().getCommandManager().sendMessage(sender, "delete.not-leader", team);
+                KenxTeams.getInstance().getCommandManager().sendMessage(sender, "error.not-leader", team);
             }
         } else {
-            KenxTeams.getInstance().getCommandManager().sendMessage(sender, "delete.not-in-team");
+            KenxTeams.getInstance().getCommandManager().sendMessage(sender, "error.not-in-team");
         }
     }
 }

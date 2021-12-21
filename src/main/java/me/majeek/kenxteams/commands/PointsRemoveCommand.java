@@ -3,29 +3,41 @@ package me.majeek.kenxteams.commands;
 import me.majeek.kenxteams.KenxTeams;
 import me.majeek.kenxteams.TeamHelper;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class PointsRemoveCommand extends SubCommand {
     public PointsRemoveCommand() {
-        super(new String[]{ "points", "remove" }, true, 2);
+        super(new String[]{ "points", "remove" }, false, 1);
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        String team = args[0];
+        Player player = (Player) sender;
         int points;
 
         try {
-            points = Integer.parseInt(args[1]);
-
-            if(!TeamHelper.isTeam(team)) {
-                throw new NumberFormatException();
-            }
+            points = Integer.parseInt(args[0]);
         } catch (NumberFormatException exception) {
             KenxTeams.getInstance().getCommandManager().sendMessage(sender, "error.invalid-arguments");
             return;
         }
 
-        TeamHelper.setPoints(team, TeamHelper.getPoints(team) - points);
-        KenxTeams.getInstance().getCommandManager().sendMessage(sender, "points.added", team, Integer.toString(points));
+        if(!TeamHelper.isInTeam(player.getUniqueId())) {
+            KenxTeams.getInstance().getCommandManager().sendMessage(sender, "error.not-in-team");
+            return;
+        }
+
+        String team = TeamHelper.getTeam(player.getUniqueId());
+
+        if(TeamHelper.isTeamLeader(player.getUniqueId())) {
+            KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".points.modifier", KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getInt(team + ".points.modifier") - points);
+            KenxTeams.getInstance().getTeamDataConfig().saveConfig();
+
+            TeamHelper.updatePoints(team);
+
+            KenxTeams.getInstance().getCommandManager().sendMessage(sender, "points.removed", team, Integer.toString(points));
+        } else {
+            KenxTeams.getInstance().getCommandManager().sendMessage(sender, "error.not-leader", team);
+        }
     }
 }

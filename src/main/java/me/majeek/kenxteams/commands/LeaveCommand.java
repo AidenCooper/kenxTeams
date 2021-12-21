@@ -73,6 +73,8 @@ public class LeaveCommand extends SubCommand {
 
                 KenxTeams.getInstance().getCommandManager().sendMessage(sender, "leave.leave", team);
             }
+        } else {
+            KenxTeams.getInstance().getCommandManager().sendMessage(sender, "error.not-in-team");
         }
     }
 }

@@ -1,17 +1,26 @@
 prefix: "&r&7[&ekenxTeams&7]&r" # Use {prefix} anywhere below to get this
 
+accept:
+  accepted-invite: "{prefix} &aYou are now apart of team &5{team}&a." # {team}
+  accepted-join: "{prefix} &5{player} &ais now apart of your team." # {team} {player}
+  in-team: "{prefix} &cThat player is already in a team." # {player}
+  no-invite-request: "{prefix} &cThat team did not send any invites." # {team}
+  no-join-request: "{prefix} &cThat player did not send any join requests." # {player}
+  offline: "{prefix} &cThat player is offline."
+  not-team: "{prefix} &cThat is not a valid team." # {team}
+
+chat:
+  switched: "{prefix} &aYou are now messaging in &5{chat} &achat." # {chat}
+
 claim:
-  already-claimed: "{prefix} &cThe &5{team} &cteam owns chunk &5X-{x} Z-{z} World-{world}&c." # {team} {x} {z} {world}
-  claimed: "{prefix} &aYour team now owns chunk &5X-{x} Z-{z} World-{world}&a." # {team} {x} {z} {world}
+  already-claimed: "{prefix} &cThe &5{team} &cteam owns chunk &5X:{x} Z:{z} World:{world}&c." # {team} {x} {z} {world}
+  claimed: "{prefix} &aYour team now owns chunk &5X:{x} Z:{z} World:{world}&a." # {team} {x} {z} {world}
   over-limit: "{prefix} &cYour team cannot claim any more chunks." # {team}
-  owns: "{prefix} &cYour team owns chunk &5X-{x} Z-{z} World-{world}&c." # {team} {x} {z} {world}
-  not-in-team: "{prefix} &cYou are not currently in a team."
-  not-leader: "{prefix} &cYou are not the leader." # {team}
+  owns: "{prefix} &cYour team owns chunk &5X:{x} Z:{z} World:{world}&c." # {team} {x} {z} {world}
 
 claims:
-  claim-item: "&aChunk Claim {count}: &5X-{x} Z-{z} World-{world}&a." # {team} {x} {z} {world} {count}
-  not-in-team: "{prefix} &cYou are not currently in a team."
-  not-leader: "{prefix} &cYou are not the leader." # {team}
+  title: "&7-----------------> &ePage {page} &7<-----------------" # {page}
+  claim-item: "&aChunk Claim {count}: &5X:{x} Z:{z} World:{world}&a." # {team} {x} {z} {world} {count}
 
 create:
   created: "{prefix} &aYour team &5{team} &ahas successfully been created." # {team}
@@ -19,10 +28,17 @@ create:
   in-team: "{prefix} &cYou are already in a team."
   over-character-limit: "{prefix} &cYour team name can not be over {limit} characters long." # {limit}
 
+decline:
+  declined-invite: "{prefix} &aYou have declined team &5{team}'s&a invite." # {team}
+  declined-join: "{prefix} &aYou have declined &5{player}'s &ajoin request." # {team} {player}
+  in-team: "{prefix} &cThat player is already in a team." # {player}
+  no-invite-request: "{prefix} &cThat team did not send any invites." # {team}
+  no-join-request: "{prefix} &cThat player did not send any join requests." # {player}
+  offline: "{prefix} &cThat player is offline."
+  not-team: "{prefix} &cThat is not a valid team." # {team}
+
 delete:
   deleted: "{prefix} &aYour team &5{team} &ahas successfully been deleted." # {team}
-  not-in-team: "{prefix} &cYou are not currently in a team."
-  not-leader: "{prefix} &cYou are not the leader." # {team}
 
 error:
   console-sender: "{prefix} &cYou must be a player to perform this command."
@@ -30,34 +46,76 @@ error:
   invalid-command: "{prefix} &cThis command does not exist. Type &e/kxt help &cfor help."
   no-arguments: "{prefix} &cArguments to this command are required."
   no-permission: "{prefix} &cYou do not have permission to perform this command."
+  not-in-team: "{prefix} &cYou are not currently in a team."
+  not-leader: "{prefix} &cYou are not the leader." # {team}
 
 help:
-  title: "&7-----------------> {prefix} &7<-----------------"
+  title: "&7-----------------> &ePage {page} &7<-----------------" # {page}
+  accept: "&7> &e/kxt accept <player/team> &7- &aAccepts any invite or join requests."
   claim: "&7> &e/kxt claim [radius] &7- &aClaims an area for your team in an optional radius of a square in blocks."
-  claims: "&7> &e/kxt claims &7- &aLists all locations of the teams claims."
+  claims: "&7> &e/kxt claims [page] &7- &aLists all locations of the teams claims."
   create: "&7> &e/kxt create <team> &7- &aCreates a new team if you are not in a team and it does not already exist."
+  decline: "&7> &e/kxt decline <player/team> &7- &aDeclines any invite or join requests."
   delete: "&7> &e/kxt delete &7- &aDeletes the team if you are the leader."
-  help: "&7> &e/kxt help &7- &aDisplays this."
-  points-add: "&7> &e/kxt points add <team> <points> &7- &aAdds the amount of points to the team."
-  points-remove: "&7> &e/kxt points remove <team> <points> &7- &aRemoves the amount of points from the team."
+  help: "&7> &e/kxt help [page] &7- &aDisplays this."
+  invite: "&7> &e/kxt invite <player> &7- &aInvites a player to your team."
+  join: "&7> &e/kxt join <team> &7- &aRequests to join a team."
+  points-add: "&7> &e/kxt points add <points> &7- &aAdds the amount of points to your teams modifier."
+  points-modifier: "&7> &e/kxt points modifier &7- &aDisplays your teams point modifier."
+  points-remove: "&7> &e/kxt points remove <points> &7- &aRemoves the amount of points from your teams modifier."
+  points-total: "&7> &e/kxt points total &7- &aDisplays your teams total points."
+  promote: "&7> &e/kxt promote <player> &7- &aPromotes the player in your team."
   reload: "&7> &e/kxt reload &7- &aReloads the config files."
+  top: "&7> &e/kxt top [page] &7- &aDisplays all teams ranked by points."
   unclaim: "&7> &e/kxt unclaim [radius] &7- &aUnclaims an area for your team in an optional radius of a square in blocks."
   version: "&7> &e/kxt version &7- &aDisplays information about this plugin."
+
+invite:
+  already-invited: "{prefix} &5{player} &chas already been invited to your team." # {team} {player}
+  in-team: "{prefix} &5{player} &cis already in a team." # {player}
+  invited: "{prefix} &5{player} &ahas been invited to your team." # {team} {player}
+  offline: "{prefix} &5{player} &cis offline." # {player}
+  player-expired: "{prefix} &cInvitation offer from team &5{team} &chas expired." # {team}
+  player-invited: "{prefix} &aTeam &5{team} &ahas invited you to their team. You have &5{timer} &aseconds to accept." # {team} {timer}
+
+join:
+  already-invited: "{prefix} &cYou have already sent an invite to team &5{team}&c." # {team}
+  in-team: "{prefix} &cYou are already in a team."
+  invited: "{prefix} &aYou have sent a request to join team &5{team}&a." # {team}
+  leader-expired: "{prefix} &cRequest to join from &5{player} &chas expired." # {player}
+  leader-invited: "{prefix} &5{player} &ahas requested to join your team. You have &5{timer} &aseconds to accept." # {player} {timer}
+  not-team: "{prefix} &cThat team does not exist."
+  offline: "{prefix} &cThe leader &5{player} &cis offline." # {player}
 
 leave:
   disbanded: "{prefix} &aYour team has been disbanded." # {team}
   leave: "{prefix} &aYou have left &5{team}&a." # {team}
   transfer: "{prefix} &5{leader} is now the leader since you left." # {team} {leader}
-  not-in-team: "{prefix} &cYou are not currently in a team."
 
 points:
-  added: "{prefix} &5{points} &apoints were added to team &5{team}&a." # {points} {team}
-  removed: "{prefix} &5{points} &apoints were removed from team &5{team}&a." # {points} {team}
+  added: "{prefix} &5{points} &apoints were added to your teams modifier." # {points} {team}
+  modifier: "{prefix} &aYour team has a &5{points} &apoint modifier." # {points} {team}
+  removed: "{prefix} &5{points} &apoints were removed from your teams modifier." # {points} {team}
+  total: "{prefix} &aYour team has &5{points} &apoints." # {points} {team}
+
+promote:
+  not-member: "{prefix} &cPick a valid member to promote." # {team}
+  transferred: "{prefix} &5{promoted} &ahas now replaced you as &5{rank}" # {team} {promoted} {rank}
+
+raid:
+  in-raid: "{prefix} &cYour team is already raiding a team." # {team}
+  not-in-raid: "{prefix} &cYour team are not currently in a raid." # {team}
+  not-team: "{prefix} &cThat is not a valid team."
+  on-cooldown: "{prefix} &cThat team is on a raid cooldown." # {team}
+  started: "&4The all mighty &5{attacker}'s &4are trying to conquer the &5{defender}'s&4!" # Will be broadcasted : {attacker} {defender}
+  stopped: "&4The attack on the &5{defender}'s &4from the &5{attacker}'s &4have subsided." # Will be broadcasted : {attacker} {defender}
 
 reload: "{prefix} &aConfig files have been reloaded."
 
+top:
+  title: "&7-----------------> &ePage {page} &7<-----------------" # {page}
+  each-team: "&e{count}. &5{team} &e- &5{points} &epoints." # {team} {points} {count}
+
 unclaim:
   no-claims: "{prefix} &cYour team has no claims in the area." # {team}
-  not-in-team: "{prefix} &cYou are not currently in a team."
-  not-leader: "{prefix} &cYou are not the leader." # {team}
-  unclaimed: "{prefix} &aChunk &5X-{x} Z-{z} World-{world} &anow unclaimed." # {team} {x} {z} {world}
+  unclaimed: "{prefix} &aChunk &5X:{x} Z:{z} World:{world} &anow unclaimed." # {team} {x} {z} {world}

@@ -17,21 +17,29 @@ public class ClaimsCommand extends SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        // Show all claims
         UUID uuid = ((Player) sender).getUniqueId();
         String team = TeamHelper.getTeam(uuid);
 
         if(team != null) {
             if (TeamHelper.isTeamLeader(uuid)) {
+                int number = KenxTeams.getInstance().getMainConfig().getConfiguration().getInt("pagination.top");
+                int page = 1;
+                if(args.length > 0) {
+                    try {
+                        page = Integer.parseInt(args[0]);
+                    } catch (NumberFormatException ignored) {}
+                }
+
+                KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claims.title", Integer.toString(page));
                 List<Pair<ImmutableList<Integer>, String>> chunks = TeamHelper.getChunkList(team);
-                for(int i = 0; i < chunks.size(); i++) {
-                    KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claims.claim-item", team, chunks.get(i).getKey().get(0).toString(), chunks.get(i).getKey().get(1).toString(), chunks.get(i).getValue(), Integer.toString(i));
+                for(int i = (page - 1) * number; i >= 0 && i < ((page - 1) * number) + number && i < chunks.size(); i++) {
+                    KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claims.claim-item", team, chunks.get(i).getKey().get(0).toString(), chunks.get(i).getKey().get(1).toString(), chunks.get(i).getValue(), Integer.toString(i + 1));
                 }
             } else {
-                KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claims.not-leader", team);
+                KenxTeams.getInstance().getCommandManager().sendMessage(sender, "error.not-leader", team);
             }
         } else {
-            KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claims.not-in-team");
+            KenxTeams.getInstance().getCommandManager().sendMessage(sender, "error.not-in-team");
         }
     }
 }

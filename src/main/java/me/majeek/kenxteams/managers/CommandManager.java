@@ -52,11 +52,14 @@ public class CommandManager implements CommandExecutor {
         String formatted = raw.replace("{prefix}", KenxTeams.getInstance().getMessagesConfig().getConfiguration().getString("prefix"));
 
         switch (path) {
+            case "chat.switched":
+                formatted = formatted.replace("{chat}", info[0]);
+                break;
             case "claims.claim-item":
                 formatted = formatted.replace("{team}", info[0]);
                 formatted = formatted.replace("{x}", info[1]);
                 formatted = formatted.replace("{z}", info[2]);
-                formatted = formatted.replace("{world", info[3]);
+                formatted = formatted.replace("{world}", info[3]);
                 formatted = formatted.replace("{count}", info[4]);
                 break;
             case "claim.already-claimed":
@@ -68,32 +71,83 @@ public class CommandManager implements CommandExecutor {
                 formatted = formatted.replace("{z}", info[2]);
                 formatted = formatted.replace("{world}", info[3]);
                 break;
+            case "accept.accepted-invite":
+            case "accept.no-invite-request":
+            case "accept.not-team":
             case "claim.over-limit":
-            case "claim.not-leader":
             case "claims.claims":
-            case "claims.not-in-team":
-            case "claims.not-leader":
             case "create.created":
             case "create.exists":
+            case "decline.declined-invite":
+            case "decline.no-invite-request":
+            case "decline.not-team":
             case "delete.deleted":
-            case "delete.not-leader":
-            case "unclaim.no-claims":
-            case "unclaim.not-leader":
+            case "error.not-leader":
+            case "invite.player-expired":
+            case "join.already-invited":
+            case "join.invited":
             case "leave.disbanded":
             case "leave.leave":
+            case "promote.not-member":
+            case "raid.in-raid":
+            case "raid.not-in-raid":
+            case "raid.on-cooldown":
+            case "unclaim.no-claims":
                 formatted = formatted.replace("{team}", info[0]);
                 break;
             case "create.over-character-limit":
                 formatted = formatted.replace("{limit}", info[0]);
                 break;
             case "points.added":
+            case "points.modifier":
             case "points.removed":
-                formatted = formatted.replace("{points}", info[0]);
-                formatted = formatted.replace("{team}", info[1]);
+            case "points.total":
+                formatted = formatted.replace("{team}", info[0]);
+                formatted = formatted.replace("{points}", info[1]);
                 break;
             case "leave.transfer":
                 formatted = formatted.replace("{team}", info[0]);
                 formatted = formatted.replace("{leader}", info[1]);
+                break;
+            case "top.each-team":
+                formatted = formatted.replace("{team}", info[0]);
+                formatted = formatted.replace("{count}", info[1]);
+                formatted = formatted.replace("{points}", info[2]);
+                break;
+            case "claims.title":
+            case "help.title":
+            case "top.title-page":
+                formatted = formatted.replace("{page}", info[0]);
+                break;
+            case "accept.in-team":
+            case "accept.no-join-request":
+            case "decline.in-team":
+            case "decline.no-join-request":
+            case "invite.in-team":
+            case "invite.offline":
+            case "join.leader-expired":
+            case "join.offline":
+                formatted = formatted.replace("{player}", info[0]);
+                break;
+            case "accept.accepted-join":
+            case "decline.declined-join":
+            case "invite.already-invited":
+            case "invite.invited":
+                formatted = formatted.replace("{team}", info[0]);
+                formatted = formatted.replace("{player}", info[1]);
+                break;
+            case "invite.player-invited":
+                formatted = formatted.replace("{team}", info[0]);
+                formatted = formatted.replace("{timer}", info[1]);
+                break;
+            case "join.leader-invited":
+                formatted = formatted.replace("{player}", info[0]);
+                formatted = formatted.replace("{timer}", info[1]);
+                break;
+            case "promote.transferred":
+                formatted = formatted.replace("{team}", info[0]);
+                formatted = formatted.replace("{promoted}", info[1]);
+                formatted = formatted.replace("{rank}", info[1]);
                 break;
         }
 

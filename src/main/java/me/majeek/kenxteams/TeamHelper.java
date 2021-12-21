@@ -16,7 +16,7 @@ import java.util.*;
 
 public class TeamHelper {
     public static int getPoints(String team) {
-        return KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getInt(team + ".points");
+        return KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getInt(team + ".points.total");
     }
 
     public static void setPoints(String team, int points) {
@@ -24,11 +24,11 @@ public class TeamHelper {
         int maximum = KenxTeams.getInstance().getMainConfig().getConfiguration().getInt("points.maximum");
 
         if(points > maximum) {
-            KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".points", maximum);
+            KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".points.total", maximum);
         } else if(points < minimum) {
-            KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".points", minimum);
+            KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".points.total", minimum);
         } else {
-            KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".points", points);
+            KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".points.total", points);
         }
 
         KenxTeams.getInstance().getTeamDataConfig().saveConfig();
@@ -90,12 +90,11 @@ public class TeamHelper {
             }
         }
 
-        KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".points", points);
-        KenxTeams.getInstance().getTeamDataConfig().saveConfig();
+        setPoints(team, points + KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getInt(team + ".points.modifier"));
     }
 
     public static void addChest(String team, Location location) {
-        String formatted = location.getChunk().getX() + ":" + location.getChunk().getZ() + "-" + location.getBlockX() + ":" + location.getBlockY() + ":" + location.getBlockZ() + "-" + location.getWorld().getName();
+        String formatted = location.getChunk().getX() + ":" + location.getChunk().getZ() + ";" + location.getBlockX() + ":" + location.getBlockY() + ":" + location.getBlockZ() + ";" + location.getWorld().getName();
 
         List<String> chests = KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getStringList(team + ".chests");
         chests.add(formatted);
@@ -105,7 +104,7 @@ public class TeamHelper {
     }
 
     public static void removeChest(String team, Location location) {
-        String formatted = location.getChunk().getX() + ":" + location.getChunk().getZ() + "-" + location.getBlockX() + ":" + location.getBlockY() + ":" + location.getBlockZ() + "-" + location.getWorld().getName();
+        String formatted = location.getChunk().getX() + ":" + location.getChunk().getZ() + ";" + location.getBlockX() + ":" + location.getBlockY() + ":" + location.getBlockZ() + ";" + location.getWorld().getName();
 
         List<String> chests = KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getStringList(team + ".chests");
         for(int i = 0; i < chests.size(); i++) {
@@ -124,7 +123,7 @@ public class TeamHelper {
         List<ImmutableList<Integer>> formatted = Lists.newArrayList();
 
         for(String chest : unformatted) {
-            String[] separated = chest.split("-")[0].split(":");
+            String[] separated = chest.split(";")[0].split(":");
 
             formatted.add(ImmutableList.copyOf(Arrays.asList(Integer.parseInt(separated[0]), Integer.parseInt(separated[1]))));
         }
@@ -137,7 +136,7 @@ public class TeamHelper {
         List<ImmutableList<Integer>> formatted = Lists.newArrayList();
 
         for(String chest : unformatted) {
-            String[] separated = chest.split("-")[1].split(":");
+            String[] separated = chest.split(";")[1].split(":");
 
             formatted.add(ImmutableList.copyOf(Arrays.asList(Integer.parseInt(separated[0]), Integer.parseInt(separated[1]), Integer.parseInt(separated[2]))));
         }
@@ -150,7 +149,7 @@ public class TeamHelper {
         List<String> formatted = Lists.newArrayList();
 
         for(String chest : unformatted) {
-            formatted.add(chest.split("-")[2]);
+            formatted.add(chest.split(";")[2]);
         }
 
         return formatted;
@@ -158,7 +157,7 @@ public class TeamHelper {
 
     public static void claimChunk(String team, ImmutableList<Integer> playerChunk, String world) {
         List<String> formatted = KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getStringList(team + ".claims");
-        formatted.add(String.valueOf(playerChunk.get(0)) + ':' + playerChunk.get(1) + '-' + world);
+        formatted.add(String.valueOf(playerChunk.get(0)) + ':' + playerChunk.get(1) + ';' + world);
 
         KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".claims", formatted);
         KenxTeams.getInstance().getTeamDataConfig().saveConfig();
@@ -191,7 +190,7 @@ public class TeamHelper {
 
                     List<String> formatted = Lists.newArrayList();
                     for(Pair<ImmutableList<Integer>, String> pair : data) {
-                        formatted.add(String.valueOf(pair.getKey().get(0)) + ':' + pair.getKey().get(1) + '-' + pair.getValue());
+                        formatted.add(String.valueOf(pair.getKey().get(0)) + ':' + pair.getKey().get(1) + ';' + pair.getValue());
                     }
 
                     KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".claims", formatted);
@@ -211,8 +210,8 @@ public class TeamHelper {
         List<Pair<ImmutableList<Integer>, String>> data = Lists.newArrayList();
 
         for(String chunk : unformatted) {
-            String[] chunkSeparated = chunk.split("-")[0].split(":");
-            String world = chunk.split("-")[1];
+            String[] chunkSeparated = chunk.split(";")[0].split(":");
+            String world = chunk.split(";")[1];
 
             data.add(new Pair<>(ImmutableList.copyOf(Arrays.asList(Integer.parseInt(chunkSeparated[0]), Integer.parseInt(chunkSeparated[1]))), world));
         }
@@ -256,7 +255,7 @@ public class TeamHelper {
     }
 
     public static boolean isTeam(String team) {
-        for(String name : KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().getValues(true).keySet()) {
+        for(String name : KenxTeams.getInstance().getTeamDataConfig().getConfiguration().getValues(false).keySet()) {
             if(name.equalsIgnoreCase(team)) {
                 return true;
             }

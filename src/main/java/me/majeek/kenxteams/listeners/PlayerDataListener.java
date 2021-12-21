@@ -26,6 +26,10 @@ public class PlayerDataListener implements Listener {
             KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().set(uuid + ".name", name);
         }
 
+        if(KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().getString(uuid + ".chat") == null) {
+            KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().set(uuid + ".chat", "global");
+        }
+
         if(KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().getString(uuid + ".playtime") == null) {
             KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().set(uuid + ".playtime", 0);
         }

@@ -3,6 +3,7 @@ version: '${project.version}'
 main: me.majeek.kenxteams.KenxTeams
 authors: [ Majeek ]
 website: https://www.fiverr.com/users/majeek_/
+softdepend: [PlaceholderAPI]
 commands:
   kenxteams:
     aliases:

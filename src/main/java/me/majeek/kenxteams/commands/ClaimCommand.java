@@ -51,7 +51,7 @@ public class ClaimCommand extends SubCommand {
 
                                 String result = TeamHelper.getTeamFromChunk(newChunk, world);
                                 if(result == null) {
-                                    if(KenxTeams.getInstance().getMainConfig().getConfiguration().getInt("team-chunk-limit") >= TeamHelper.getChunkList(team).size()) {
+                                    if(KenxTeams.getInstance().getMainConfig().getConfiguration().getInt("team-chunk-limit") > TeamHelper.getChunkList(team).size()) {
                                         TeamHelper.claimChunk(team, newChunk, world);
 
                                         KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claim.claimed", team, newChunk.get(0).toString(), newChunk.get(1).toString(), world);
@@ -71,10 +71,10 @@ public class ClaimCommand extends SubCommand {
                     }
                 }.runTask(KenxTeams.getInstance());
             } else {
-                KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claim.not-leader", team);
+                KenxTeams.getInstance().getCommandManager().sendMessage(sender, "error.not-leader", team);
             }
         } else {
-            KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claim.not-in-team");
+            KenxTeams.getInstance().getCommandManager().sendMessage(sender, "error.not-in-team");
         }
     }
 }
