@@ -10,7 +10,7 @@ public class SquidSpawnListener implements Listener {
     @EventHandler
     public void onSquidSpawn(EntitySpawnEvent event) {
         if(event.getEntityType() == EntityType.SQUID && !KenxTeams.getInstance().getMainConfig().getConfiguration().getBoolean("squid-spawn-enabled")) {
-            event.setCancelled(true);
+            event.getEntity().remove();
         }
     }
 }

@@ -1,10 +1,10 @@
 package me.majeek.kenxteams.commands;
 
 import com.google.common.collect.ImmutableList;
-import javafx.util.Pair;
 import me.majeek.kenxteams.KenxTeams;
 import me.majeek.kenxteams.TeamHelper;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.libs.com.google.gson.internal.Pair;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class ClaimsCommand extends SubCommand {
                 KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claims.title", Integer.toString(page));
                 List<Pair<ImmutableList<Integer>, String>> chunks = TeamHelper.getChunkList(team);
                 for(int i = (page - 1) * number; i >= 0 && i < ((page - 1) * number) + number && i < chunks.size(); i++) {
-                    KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claims.claim-item", team, chunks.get(i).getKey().get(0).toString(), chunks.get(i).getKey().get(1).toString(), chunks.get(i).getValue(), Integer.toString(i + 1));
+                    KenxTeams.getInstance().getCommandManager().sendMessage(sender, "claims.claim-item", team, chunks.get(i).first.get(0).toString(), chunks.get(i).first.get(1).toString(), chunks.get(i).second, Integer.toString(i + 1));
                 }
             } else {
                 KenxTeams.getInstance().getCommandManager().sendMessage(sender, "error.not-leader", team);

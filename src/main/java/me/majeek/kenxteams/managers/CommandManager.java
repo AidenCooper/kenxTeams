@@ -116,7 +116,7 @@ public class CommandManager implements CommandExecutor {
                 break;
             case "claims.title":
             case "help.title":
-            case "top.title-page":
+            case "top.title":
                 formatted = formatted.replace("{page}", info[0]);
                 break;
             case "accept.in-team":

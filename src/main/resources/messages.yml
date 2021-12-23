@@ -61,6 +61,7 @@ help:
   help: "&7> &e/kxt help [page] &7- &aDisplays this."
   invite: "&7> &e/kxt invite <player> &7- &aInvites a player to your team."
   join: "&7> &e/kxt join <team> &7- &aRequests to join a team."
+  leave: "&7> &e/kxt leave &7- &aLeaves your current team or disbands if your the only member."
   points-add: "&7> &e/kxt points add <points> &7- &aAdds the amount of points to your teams modifier."
   points-modifier: "&7> &e/kxt points modifier &7- &aDisplays your teams point modifier."
   points-remove: "&7> &e/kxt points remove <points> &7- &aRemoves the amount of points from your teams modifier."

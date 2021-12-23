@@ -7,6 +7,7 @@ import me.majeek.kenxteams.listeners.*;
 import me.majeek.kenxteams.managers.RaidManager;
 import me.majeek.kenxteams.managers.CommandManager;
 import me.majeek.kenxteams.managers.EventManager;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Set;
+import java.util.logging.Level;
 
 public final class KenxTeams extends JavaPlugin {
     private static KenxTeams instance;
@@ -33,6 +35,11 @@ public final class KenxTeams extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        String ansi = "\u001B[33m";
+        String version = Runtime.class.getPackage().getImplementationVersion();
+        String reset = "\u001B[0m";
+        System.out.println(ansi + version + reset);
+
         instance = this;
 
         this.placeholderEnabled = getServer().getPluginManager().getPlugin("PlaceholderAPI") != null;

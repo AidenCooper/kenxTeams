@@ -2,11 +2,11 @@ package me.majeek.kenxteams.managers;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import javafx.util.Pair;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.majeek.kenxteams.KenxTeams;
 import me.majeek.kenxteams.TeamHelper;
 import me.majeek.kenxteams.board.FastBoard;
+import net.minecraft.util.org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -62,7 +62,7 @@ public class RaidManager {
     }
 
     public void startRaid(String attacker, String defender) {
-        Pair<String, String> pair = new Pair<>(attacker, defender);
+        Pair<String, String> pair = Pair.of(attacker, defender);
         raids.add(pair);
         countdowns.add(KenxTeams.getInstance().getMainConfig().getConfiguration().getInt("timer.raid"));
 
