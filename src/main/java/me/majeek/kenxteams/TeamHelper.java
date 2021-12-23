@@ -3,13 +3,13 @@ package me.majeek.kenxteams;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.minecraft.util.com.google.common.collect.Maps;
+import net.minecraft.util.org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.craftbukkit.libs.com.google.gson.internal.Pair;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -168,13 +168,13 @@ public class TeamHelper {
             List<Pair<ImmutableList<Integer>, String>> data = TeamHelper.getChunkList(team);
 
             for(int i = 0; i < data.size(); i++) {
-                if(data.get(i).first.get(0).equals(chunk.get(0)) && data.get(i).first.get(1).equals(chunk.get(1)) && data.get(i).second.equalsIgnoreCase(world)) {
+                if(data.get(i).getKey().get(0).equals(chunk.get(0)) && data.get(i).getKey().get(1).equals(chunk.get(1)) && data.get(i).getValue().equalsIgnoreCase(world)) {
                     List<ImmutableList<Integer>> chest = getChestChunks(team);
                     for(int j = 0; j < chest.size(); j++) {
-                        ImmutableList<Integer> key = data.get(i).first;
+                        ImmutableList<Integer> key = data.get(i).getKey();
                         ImmutableList<Integer> chestChunk = chest.get(j);
 
-                        if(key.get(0).equals(chestChunk.get(0)) && key.get(1).equals(chestChunk.get(1)) && data.get(i).second.equalsIgnoreCase(getChestWorlds(team).get(j))) {
+                        if(key.get(0).equals(chestChunk.get(0)) && key.get(1).equals(chestChunk.get(1)) && data.get(i).getValue().equalsIgnoreCase(getChestWorlds(team).get(j))) {
                             ImmutableList<Integer> location = getChestLocations(team).get(j);
                             removeChest(team, new Location(Bukkit.getWorld(world), location.get(0), location.get(1), location.get(2)));
 
@@ -190,7 +190,7 @@ public class TeamHelper {
 
                     List<String> formatted = Lists.newArrayList();
                     for(Pair<ImmutableList<Integer>, String> pair : data) {
-                        formatted.add(String.valueOf(pair.first.get(0)) + ':' + pair.first.get(1) + ';' + pair.first);
+                        formatted.add(String.valueOf(pair.getKey().get(0)) + ':' + pair.getKey().get(1) + ';' + pair.getKey());
                     }
 
                     KenxTeams.getInstance().getTeamDataConfig().getConfiguration().set(team + ".claims", formatted);
@@ -213,7 +213,7 @@ public class TeamHelper {
             String[] chunkSeparated = chunk.split(";")[0].split(":");
             String world = chunk.split(";")[1];
 
-            data.add(new Pair<>(ImmutableList.copyOf(Arrays.asList(Integer.parseInt(chunkSeparated[0]), Integer.parseInt(chunkSeparated[1]))), world));
+            data.add(Pair.of(ImmutableList.copyOf(Arrays.asList(Integer.parseInt(chunkSeparated[0]), Integer.parseInt(chunkSeparated[1]))), world));
         }
 
         return data;
@@ -228,7 +228,7 @@ public class TeamHelper {
     public static String getTeamFromChunk(ImmutableList<Integer> chunk, String world) {
         for(String team : TeamHelper.getTeamList()) {
             for(Pair<ImmutableList<Integer>, String> pair : TeamHelper.getChunkList(team)) {
-                if(pair.first.get(0).equals(chunk.get(0)) && pair.first.get(1).equals(chunk.get(1)) && pair.second.equalsIgnoreCase(world)) {
+                if(pair.getKey().get(0).equals(chunk.get(0)) && pair.getKey().get(1).equals(chunk.get(1)) && pair.getValue().equalsIgnoreCase(world)) {
                     return team;
                 }
             }

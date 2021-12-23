@@ -1,6 +1,5 @@
 package me.majeek.kenxteams.commands;
 
-import com.google.common.collect.Maps;
 import me.majeek.kenxteams.KenxTeams;
 import me.majeek.kenxteams.TeamHelper;
 import org.bukkit.command.CommandSender;
@@ -14,13 +13,18 @@ public class TopCommand extends SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        HashMap<String, Integer> temp = Maps.newHashMap();
+        HashMap<String, Integer> temp = new HashMap<>();
         for(String team : TeamHelper.getTeamList()) {
             temp.put(team, TeamHelper.getPoints(team));
         }
 
         List<Map.Entry<String, Integer>> sort = new LinkedList<>(temp.entrySet());
-        sort.sort(Map.Entry.comparingByValue());
+        Collections.sort(sort, new Comparator<Map.Entry<String, Integer>>() {
+            @Override
+            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
         HashMap<String, Integer> data = new LinkedHashMap<>();
         for(Map.Entry<String, Integer> element : sort) {
             data.put(element.getKey(), element.getValue());

@@ -2,7 +2,6 @@ package me.majeek.kenxteams.commands;
 
 import me.majeek.kenxteams.KenxTeams;
 import me.majeek.kenxteams.TeamHelper;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -23,7 +22,7 @@ public class RaidStartCommand extends SubCommand {
 
             if(TeamHelper.isTeamLeader(uuid)) {
                 if(!KenxTeams.getInstance().getRaidManager().isInRaid(team)) {
-                    if(TeamHelper.isTeam(args[0])) {
+                    if(TeamHelper.isTeam(args[0]) && !args[0].equalsIgnoreCase(team)) {
                         if(!KenxTeams.getInstance().getRaidManager().onCooldown(args[0])) {
                             KenxTeams.getInstance().getRaidManager().startRaid(team, args[0]);
 

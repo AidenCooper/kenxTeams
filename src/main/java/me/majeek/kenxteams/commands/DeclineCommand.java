@@ -35,7 +35,7 @@ public class DeclineCommand extends SubCommand {
                     KenxTeams.getInstance().getCommandManager().sendMessage(sender, "decline.offline");
                 }
             } else {
-                KenxTeams.getInstance().getCommandManager().sendMessage(sender, "error.not-leader");
+                KenxTeams.getInstance().getCommandManager().sendMessage(sender, "error.not-leader", TeamHelper.getTeam(uuid));
             }
         } else {
             String team = args[0];

@@ -1,21 +1,20 @@
 package me.majeek.kenxteams;
 
-import com.google.common.collect.Sets;
 import me.majeek.kenxteams.commands.*;
 import me.majeek.kenxteams.configs.ConfigFile;
 import me.majeek.kenxteams.listeners.*;
 import me.majeek.kenxteams.managers.RaidManager;
 import me.majeek.kenxteams.managers.CommandManager;
 import me.majeek.kenxteams.managers.EventManager;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
 
 public final class KenxTeams extends JavaPlugin {
     private static KenxTeams instance;
@@ -35,11 +34,6 @@ public final class KenxTeams extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        String ansi = "\u001B[33m";
-        String version = Runtime.class.getPackage().getImplementationVersion();
-        String reset = "\u001B[0m";
-        System.out.println(ansi + version + reset);
-
         instance = this;
 
         this.placeholderEnabled = getServer().getPluginManager().getPlugin("PlaceholderAPI") != null;
@@ -51,7 +45,7 @@ public final class KenxTeams extends JavaPlugin {
         this.scoreboardConfig = new ConfigFile("scoreboard").createFile(true).loadConfig();
         this.teamDataConfig = new ConfigFile("team_data").createFile(false).loadConfig();
 
-        Set<SubCommand> commands = Sets.newHashSet(
+        Set<SubCommand> commands = new HashSet<>(Arrays.asList(
                 new AcceptCommand(),
                 new ChatCommand(),
                 new ClaimCommand(),
@@ -74,15 +68,15 @@ public final class KenxTeams extends JavaPlugin {
                 new TopCommand(),
                 new UnclaimCommand(),
                 new VersionCommand()
-        );
-        Set<Listener> listeners = Sets.newHashSet(
+        ));
+        Set<Listener> listeners = new HashSet<>(Arrays.asList(
                 new ChatListener(),
                 new ChestDataListener(),
                 new LogExploitListener(),
                 new PlayerDataListener(),
                 new RaidListener(),
                 new SquidSpawnListener()
-        );
+        ));
 
         this.commandManager = new CommandManager("kenxteams", commands);
         this.eventManager = new EventManager(listeners);
