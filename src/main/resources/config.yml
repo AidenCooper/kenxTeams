@@ -4,6 +4,10 @@ squid-spawn-enabled: false # If squid spawners will spawn any squids
 team-chat-format: "&7[&e{rank}&7] &5{name} &c> {message}" # Format for team chat : {rank} {name} {message}
 team-chunk-limit: 20 # Maximum amount of chunks a team can claim
 team-name-character-limit: 16 # Maximum amount of characters a team name can have
+walk-into-area: # The message the player will see when walking into a different chunk owner. Leave blank ("") to send no message
+  claimed-to-claimed: "{prefix} &4You are now walking in &5{to}'s &4territory." # {prefix} {from} {to}
+  claimed-to-none: "{prefix} &aYou are now walking in the wild." # {prefix} {from}
+  none-to-claimed: "{prefix} &4You are now walking in &5{to}'s &4territory." # {prefix} {to}
 
 pagination: # This is the maximum number of items that will be displayed per page
   claims: 20

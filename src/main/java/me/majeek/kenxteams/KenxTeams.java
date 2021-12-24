@@ -73,6 +73,7 @@ public final class KenxTeams extends JavaPlugin {
                 new ChatListener(),
                 new ChestDataListener(),
                 new LogExploitListener(),
+                new MoveIntoClaim(),
                 new PlayerDataListener(),
                 new RaidListener(),
                 new SquidSpawnListener()
