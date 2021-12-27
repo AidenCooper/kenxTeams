@@ -2,6 +2,7 @@ package me.majeek.kenxteams.listeners;
 
 import me.majeek.kenxteams.KenxTeams;
 import me.majeek.kenxteams.TeamHelper;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -17,7 +18,7 @@ public class ChatListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         if(!KenxTeams.getInstance().getPlayerDataConfig().getConfiguration().getString(event.getPlayer().getUniqueId() + ".chat").equalsIgnoreCase("global")) {
-            String format = KenxTeams.getInstance().getMainConfig().getConfiguration().getString("team-chat-format");
+            String format = KenxTeams.getInstance().getMainConfig().getConfiguration().getString("chat.team-format");
             String rank = TeamHelper.isTeamLeader(event.getPlayer().getUniqueId()) ? "Leader" : "Member";
             String name = event.getPlayer().getName();
             String message = event.getMessage();
@@ -35,6 +36,14 @@ public class ChatListener implements Listener {
                     player.sendMessage(formatted);
                 }
             }
+        } else {
+            String team = TeamHelper.getTeam(event.getPlayer().getUniqueId());
+
+            if(team == null) {
+                team = KenxTeams.getInstance().getMainConfig().getConfiguration().getString("chat.no-team");
+            }
+
+            event.setFormat(ChatColor.translateAlternateColorCodes('&', event.getFormat().replace("{team}", team)));
         }
     }
 }
